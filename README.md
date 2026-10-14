@@ -1,5 +1,7 @@
 # tiny_moe_chip
 
+*A tiny TPU / MoE accelerator.* (GitHub repo: `moni_asic`)
+
 A small custom inference chip for a quantized mixture-of-experts model, built to test whether a model-specialized design can beat general-purpose silicon on efficiency (tokens per joule and per area, not absolute speed).
 
 Status: early. A numpy reference of one Qwen3 layer, a toy MoE, frozen test prompts, draft acceptance criteria and a draft numerics contract. No RTL yet.
@@ -21,7 +23,7 @@ uv run pytest                                    # numpy-only sanity tests
 uv sync --extra torch                            # heavy: CPU torch + transformers on Windows
 uv run python -m tiny_moe.ref.check_qwen3_layer  # needs the torch extra
 ```
-On RunPod/Colab torch is preinstalled: use `uv pip install --system ...` (see `scripts/runpod_session.sh`), not `uv sync`.
+On a fresh GPU pod (RunPod, as root) with the repo present, `bash scripts/runpod_session.sh` bootstraps uv, installs CUDA torch with `uv sync --extra torch`, and runs the layer check and the HF baselines. On Colab, where torch is preinstalled, use `uv pip install --system ...` instead of `uv sync`.
 C++ (`sim/`, root `CMakeLists.txt`) and RTL (`hw/`) are placeholders.
 
 `reference/` holds third-party projects used as inspiration (NVDLA, tiny-tpu, transformer-tpu-int4); they keep their own licenses and history.
