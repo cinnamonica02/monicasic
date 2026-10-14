@@ -1,0 +1,40 @@
+[build-system]
+requires = ["setuptools>=68"]
+build-backend = "setuptools.build_meta"
+
+[project]
+name = "tiny-moe-chip"
+version = "0.0.1"
+description = "Reference models, golden/integer references and tooling for a small custom quantized-MoE inference chip"
+readme = "README.md"
+requires-python = ">=3.10"
+dependencies = ["numpy"]
+
+[project.optional-dependencies]
+# HF baseline + toy MoE training. Heavy. On RunPod/Colab torch is preinstalled: use `uv pip install --system`, not `uv sync`.
+torch = ["torch", "transformers>=4.51", "accelerate"]
+# RTL simulation (cocotb; Icarus/Verilator are installed separately)
+sim = ["cocotb"]
+
+[dependency-groups]
+dev = ["pytest"]
+
+[tool.setuptools.packages.find]
+include = ["tiny_moe*"]
+
+[tool.pytest.ini_options]
+testpaths = ["tests"]
+pythonpath = ["."]
+
+[tool.uv]
+# Research repo run from the repo root: install dependencies only, do not build/install tiny_moe itself.
+package = false
+
+# Windows laptop: CPU-only torch wheels (Linux/GPU boxes keep the default CUDA wheels from PyPI).
+[tool.uv.sources]
+torch = [{ index = "pytorch-cpu", marker = "sys_platform == 'win32'" }]
+
+[[tool.uv.index]]
+name = "pytorch-cpu"
+url = "https://download.pytorch.org/whl/cpu"
+explicit = true

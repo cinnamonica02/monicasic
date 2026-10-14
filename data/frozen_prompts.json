@@ -1,0 +1,9 @@
+{
+  "status": "FROZEN-CANDIDATE 2026-10-14. Do not edit after the first measured run; the sha256 of this file goes into every run manifest. Prompts are raw-text openings (no chat template needed). Mix: fun/culture, technical, code, long.",
+  "prompts": [
+    "A first-time visitor's funny guide to street food in Mexico City: the first rule is",
+    "The reason generating text one token at a time is limited by memory bandwidth, not by compute, is that",
+    "def fibonacci(n):\n    \"\"\"Return the n-th Fibonacci number.\"\"\"\n",
+    "We are designing a small custom chip that runs one fixed language model. Because the model never changes, every part of the design can be tuned to it: the number formats are chosen to match the weights, the lookup tables hold only the functions the model uses, and the memory layout follows the order in which layers are read. At batch size one, generating each token requires reading nearly every weight from memory once, so the speed of the chip is set by how much of the available memory bandwidth it can turn into useful work, not by how many multipliers it has. The team therefore measures success as the fraction of bandwidth used, and checks every result against a bit-exact integer reference before comparing it with the original floating-point model. In one sentence, the main idea of this project is"
+  ]
+}

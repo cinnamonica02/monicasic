@@ -1,0 +1,42 @@
+{
+  "run_id": "",
+  "date_utc": "",
+  "purpose": "baseline | float-golden | integer-ref | sim | rtl | fpga",
+  "git_commit": "",
+  "contract_hash": "git hash of NUMERICS_CONTRACT.md",
+  "acceptance_hash": "git hash of ACCEPTANCE.md",
+  "model": {
+    "name": "Qwen/Qwen3-4B",
+    "revision": "",
+    "variant": "base | instruct",
+    "dtype": "",
+    "weights_sha256": "",
+    "tokenizer_sha256": ""
+  },
+  "inputs": {
+    "prompts_file_sha256": "",
+    "chat_template_applied": false,
+    "decoding": "greedy",
+    "batch": 1,
+    "context_tokens": 0
+  },
+  "environment": {
+    "where": "local-cpu | modal-cpu | modal-gpu-<type> | fpga-<board>",
+    "torch": "",
+    "transformers": "",
+    "numpy": "",
+    "tools": {}
+  },
+  "outputs": {
+    "tokens_sha256": "",
+    "logits_digest_sha256": "",
+    "files": []
+  },
+  "results": {
+    "criterion": "A1 | A2 | A3 | A4 | A5",
+    "value": null,
+    "threshold": null,
+    "pass": null
+  },
+  "reviewed_by": ""
+}

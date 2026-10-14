@@ -1,0 +1,41 @@
+# python
+__pycache__/
+*.pyc
+.venv*/
+*.egg-info/
+.pytest_cache/
+
+# cmake / rust (placeholders for later)
+build/
+cmake-build-*/
+target/
+
+# simulation + synthesis artifacts
+*.vcd
+*.fst
+*.wdb
+*.vvp
+obj_dir/
+sim_build/
+runs/*
+!runs/MANIFEST_TEMPLATE.json
+
+# run outputs and checkpoints
+out/
+out.tar.gz
+session.log
+*.pt
+*.npz
+*.safetensors
+
+# third-party reference repos keep their own history; do not track them here
+reference/
+/tiny-tpu/
+/transformer-tpu-int4/
+
+# editor / local agent files
+.vscode*
+.claude/
+
+# third-party text and personal chat exports: decide before publishing (see CLAUDE.md)
+docs/background/
