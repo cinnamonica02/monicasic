@@ -1,0 +1,40 @@
+{
+  "status": "FROZEN-CANDIDATE (not frozen until the user approves)",
+  "tokenizer": "Qwen/Qwen3-4B@1cfa9a7208912126459214e8b04321603b3df60c tokenizer.json, add_special_tokens=False",
+  "window_tokens": 1024,
+  "scored_positions_per_window": 1023,
+  "total_scored_positions": 4092,
+  "python_stdlib_note": "code windows depend on the file bytes; file_sha256 detects a different Python",
+  "windows": [
+    {
+      "kind": "prose",
+      "source": "Salesforce/wikitext@b08601e04326c79dfdd32d625aee71d232d685c3:wikitext-2-raw-v1/test-00000-of-00001.parquet",
+      "token_offset": 73728,
+      "n_tokens": 1024,
+      "token_ids_sha256": "4b312273ab8046042974b778819be2abef9c00276f18219103d66ed81be42c93"
+    },
+    {
+      "kind": "prose",
+      "source": "Salesforce/wikitext@b08601e04326c79dfdd32d625aee71d232d685c3:wikitext-2-raw-v1/test-00000-of-00001.parquet",
+      "token_offset": 223232,
+      "n_tokens": 1024,
+      "token_ids_sha256": "9dfb2ea37f6ba20947c934ea12c09c63a245ed837d878ae6f9f4f54c391a462f"
+    },
+    {
+      "kind": "code",
+      "source": "cpython stdlib argparse.py",
+      "file_sha256": "7cc582dcb3b76e2c957f78a3f74e9809d6c311d6aab7bcaa2c9954d0cbff5f30",
+      "token_offset": 1024,
+      "n_tokens": 1024,
+      "token_ids_sha256": "74a9d48f969748916ab4790879cc47acfa3e9041365244298fc8d150051cacd7"
+    },
+    {
+      "kind": "code",
+      "source": "cpython stdlib dataclasses.py",
+      "file_sha256": "d242aea5fcf6408b1c1f622442f88f68b9526ce1f8bd2890d74a144677c427d9",
+      "token_offset": 1024,
+      "n_tokens": 1024,
+      "token_ids_sha256": "8841958aed932ee2dd8ecfbaa3c45b3e7935f8db114dc4860b9b90552e2329ca"
+    }
+  ]
+}

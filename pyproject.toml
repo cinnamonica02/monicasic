@@ -19,7 +19,7 @@ sim = ["cocotb"]
 [dependency-groups]
 dev = ["pytest"]
 cloud = ["modal"]   # client for scripts/modal_*.py
-ref = ["huggingface_hub"]   # checkpoint download for tiny_moe.ref.check_qwen3_full (no torch needed)
+ref = ["huggingface_hub", "tokenizers", "pyarrow"]   # checkpoint download, tokenizer, WikiText parquet (no torch needed)
 
 [tool.setuptools.packages.find]
 include = ["tiny_moe*"]
