@@ -18,6 +18,7 @@ sim = ["cocotb"]
 
 [dependency-groups]
 dev = ["pytest"]
+cloud = ["modal"]   # client for scripts/modal_*.py
 
 [tool.setuptools.packages.find]
 include = ["tiny_moe*"]
