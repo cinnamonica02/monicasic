@@ -7,7 +7,7 @@ Precedent: Melten's N10 note (`docs/background/SUCCESS_STORY.md`) fixed targets,
 
 | id | what | model | pass condition | status |
 |---|---|---|---|---|
-| A1 | float golden matches `transformers` | Qwen3-4B (layer, then full) | max abs diff < 1e-4 per layer; full-model top-1 agree on test set | layer check written (`tiny_moe/ref/check_qwen3_layer.py`), not yet run |
+| A1 | float golden matches `transformers` | Qwen3-4B (layer, then full) | max abs diff < 1e-4 per layer; full-model top-1 agree on test set | STATUS (thresholds unchanged): layer check run, small random-weight config, max abs diff 2.4e-07; full 36-layer real-weight check (`tiny_moe/ref/check_qwen3_full.py`, run1 fp32 baseline, 4 prompts, 128 positions): top-1 agreement 128/128, max abs logit diff 4e-05..1.5e-04 (fp16 vs fp32: 0.03..0.16) |
 | A2 | integer reference vs float golden (quality) | Qwen3-4B | top-1 next-token agreement >= 97% on the frozen set AND perplexity within 0.5% of float (N10: 95.3-98.4% agreement; N11: 97.2% agreement, perplexity within 0.45%) | PROPOSED |
 | A3 | simulator / RTL vs integer reference (exactness) | toy MoE, then Qwen3-4B | 100% of steps equal: token id AND digest of full output logits | PROPOSED (N10 method) |
 | A4 | bandwidth efficiency | FPGA or memory-model sim | tokens/s x bytes read per token / sustained read bandwidth >= 60% at 2K context (N10's target). Predict it with a memory-controller simulation BEFORE the build and report predicted vs measured (N11: 45.3 predicted, 45.37 GB/s measured) | PROPOSED |
