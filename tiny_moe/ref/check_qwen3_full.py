@@ -83,8 +83,13 @@ def cfg_from_json(path):
                inter=j["intermediate_size"], rope_theta=float(rope), eps=float(j["rms_norm_eps"])), j["num_hidden_layers"]
 
 
-def forward(ck, cfg, n_layers, seqs, take, head_chunk=8192, log=print):
-    """seqs: list of int token arrays. take: list of position-index arrays. Returns list of (len(take_i), vocab) float32 logits."""
+def head_name(ck):
+    return "lm_head.weight" if "lm_head.weight" in ck.t else "model.embed_tokens.weight"   # Qwen3-4B ties them
+
+
+def final_hidden(ck, cfg, n_layers, seqs, take, log=print):
+    """Run all layers + final RMSNorm. seqs: list of int token arrays; take: list of position-index arrays.
+    Returns (sum(len(take_i)), hidden) float32, rows in order of take."""
     xs = [ck.get("model.embed_tokens.weight", rows=np.asarray(s, dtype=np.int64)) for s in seqs]
     for L in range(n_layers):
         t0 = time.time()
@@ -92,8 +97,13 @@ def forward(ck, cfg, n_layers, seqs, take, head_chunk=8192, log=print):
         xs = [decoder_layer(x, w, cfg) for x in xs]
         log(f"layer {L + 1}/{n_layers}  {time.time() - t0:.1f}s")
     nrm = ck.get("model.norm.weight")
-    h = np.concatenate([rmsnorm(x[np.asarray(t)], nrm, cfg.eps) for x, t in zip(xs, take)])
-    head = "lm_head.weight" if "lm_head.weight" in ck.t else "model.embed_tokens.weight"   # Qwen3-4B ties them
+    return np.concatenate([rmsnorm(x[np.asarray(t)], nrm, cfg.eps) for x, t in zip(xs, take)])
+
+
+def forward(ck, cfg, n_layers, seqs, take, head_chunk=8192, log=print):
+    """Returns a list of (len(take_i), vocab) float32 logits. Holds all logits in memory: use head_stats for big sets."""
+    h = final_hidden(ck, cfg, n_layers, seqs, take, log)
+    head = head_name(ck)
     vocab = ck.t[head][2][0]
     out = np.empty((h.shape[0], vocab), np.float32)
     for r0 in range(0, vocab, head_chunk):
