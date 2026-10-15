@@ -24,7 +24,9 @@ WIKI_REV = "b08601e04326c79dfdd32d625aee71d232d685c3"
 WIKI_FILE = "wikitext-2-raw-v1/test-00000-of-00001.parquet"
 L = 1024
 PROSE_STARTS = (0.25, 0.75)                    # fractions of the tokenized test split (rounded down to a multiple of L)
-CODE = (("argparse.py", 1024), ("dataclasses.py", 1024))   # (stdlib file, token offset; skips the license/import header)
+# (stdlib file, token offset). dataclasses.py at 1024 opened on a ~20-line ASCII-art table (very predictable tokens, would
+# inflate agreement), so it uses 2048, found by reading the TEXT only; no model output existed at that point.
+CODE = (("argparse.py", 1024), ("dataclasses.py", 2048))
 
 
 def sha(b):

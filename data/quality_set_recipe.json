@@ -32,9 +32,9 @@
       "kind": "code",
       "source": "cpython stdlib dataclasses.py",
       "file_sha256": "d242aea5fcf6408b1c1f622442f88f68b9526ce1f8bd2890d74a144677c427d9",
-      "token_offset": 1024,
+      "token_offset": 2048,
       "n_tokens": 1024,
-      "token_ids_sha256": "8841958aed932ee2dd8ecfbaa3c45b3e7935f8db114dc4860b9b90552e2329ca"
+      "token_ids_sha256": "79f78b42bef6a7743e78b064acda29679a6fc9253a9e2f097196b475243cc480"
     }
   ]
 }
