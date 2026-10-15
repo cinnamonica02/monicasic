@@ -2183,6 +2183,9 @@ cloud = [
 dev = [
     { name = "pytest" },
 ]
+ref = [
+    { name = "huggingface-hub" },
+]
 
 [package.metadata]
 requires-dist = [
@@ -2198,6 +2201,7 @@ provides-extras = ["torch", "sim"]
 [package.metadata.requires-dev]
 cloud = [{ name = "modal" }]
 dev = [{ name = "pytest" }]
+ref = [{ name = "huggingface-hub" }]
 
 [[package]]
 name = "tokenizers"
