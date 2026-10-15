@@ -4,7 +4,7 @@ Run in a Colab cell (GPU optional):
   !pip -q install "transformers>=4.51" accelerate
   %run scripts/baseline_dump.py --out /content/baseline   # from the repo root; then copy /content/baseline to Drive or download it
 
-Greedy, batch 1. Saves per prompt: ids, generated ids, per-step logits (float16) and sha256 digests, plus a manifest
+Greedy, batch 1. Saves per prompt: ids, generated ids, per-step logits (float32) and sha256 digests, plus a manifest
 following runs/MANIFEST_TEMPLATE.json. Record the dtype: a T4 has no native bf16, so use fp16 there; fp32 needs ~16 GB.
 Raw text is used by default; pass --chat to wrap prompts in the model's chat template (instruct models).
 """
@@ -55,7 +55,7 @@ def main():
                 out = model(cur, past_key_values=past, use_cache=True)
                 past = out.past_key_values
                 lg = out.logits[0, -1].float()
-                step_logits.append(lg.cpu().numpy().astype(np.float16))
+                step_logits.append(lg.cpu().numpy())  # float32: lossless for fp16/bf16 runs too, exact for fp32 runs
                 nxt = int(lg.argmax())          # greedy; torch picks the lowest index on exact ties
                 gen.append(nxt)
                 if nxt == tok.eos_token_id:
@@ -71,7 +71,8 @@ def main():
 
     manifest = {
         "purpose": "baseline", "date_utc": time.strftime("%Y-%m-%dT%H:%M:%SZ", time.gmtime()),
-        "model": {"name": a.model, "revision": a.revision, "dtype": a.dtype},
+        "model": {"name": a.model, "revision": a.revision, "dtype": a.dtype,
+                  "resolved_commit": getattr(model.config, "_commit_hash", None)},  # what an unpinned download actually got
         "inputs": {"prompts_file_sha256": sha(open(a.prompts, "rb").read()), "chat_template_applied": a.chat,
                    "decoding": "greedy", "batch": 1, "max_new_tokens": a.max_new},
         "environment": {"where": "colab" if "COLAB_GPU" in os.environ or os.path.exists("/content") else "other",
