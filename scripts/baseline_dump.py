@@ -25,6 +25,16 @@ def sha(b):
     return hashlib.sha256(b).hexdigest()
 
 
+def resolved_commit(model_name):
+    """Commit hash of the cached snapshot (the HF cache path is .../snapshots/<hash>/config.json); None if unknown."""
+    try:
+        from huggingface_hub import try_to_load_from_cache
+        path = try_to_load_from_cache(model_name, "config.json")
+        return os.path.basename(os.path.dirname(path)) if isinstance(path, str) else None
+    except Exception:
+        return None
+
+
 def main():
     p = argparse.ArgumentParser()
     p.add_argument("--model", default="Qwen/Qwen3-4B")
@@ -72,7 +82,7 @@ def main():
     manifest = {
         "purpose": "baseline", "date_utc": time.strftime("%Y-%m-%dT%H:%M:%SZ", time.gmtime()),
         "model": {"name": a.model, "revision": a.revision, "dtype": a.dtype,
-                  "resolved_commit": getattr(model.config, "_commit_hash", None)},  # what an unpinned download actually got
+                  "resolved_commit": resolved_commit(a.model)},  # what an unpinned download actually got
         "inputs": {"prompts_file_sha256": sha(open(a.prompts, "rb").read()), "chat_template_applied": a.chat,
                    "decoding": "greedy", "batch": 1, "max_new_tokens": a.max_new},
         "environment": {"where": "colab" if "COLAB_GPU" in os.environ or os.path.exists("/content") else "other",
