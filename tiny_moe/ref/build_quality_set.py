@@ -65,7 +65,7 @@ def build():
         assert len(w) == L, f"{m['source']}: only {len(w)} tokens available"
         m["n_tokens"] = L
         m["token_ids_sha256"] = ids_sha(w)
-    recipe = {"status": "FROZEN-CANDIDATE (not frozen until the user approves)",
+    recipe = {"status": "FROZEN 2026-10-15 (user approved; see docs/spec/ACCEPTANCE.md)",
               "tokenizer": f"Qwen/Qwen3-4B@{QWEN_REV} tokenizer.json, add_special_tokens=False",
               "window_tokens": L, "scored_positions_per_window": L - 1, "total_scored_positions": len(windows) * (L - 1),
               "python_stdlib_note": "code windows depend on the file bytes; file_sha256 detects a different Python",

@@ -1,5 +1,5 @@
 {
-  "status": "FROZEN-CANDIDATE (not frozen until the user approves)",
+  "status": "FROZEN 2026-10-15 (user approved; see docs/spec/ACCEPTANCE.md)",
   "tokenizer": "Qwen/Qwen3-4B@1cfa9a7208912126459214e8b04321603b3df60c tokenizer.json, add_special_tokens=False",
   "window_tokens": 1024,
   "scored_positions_per_window": 1023,
