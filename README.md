@@ -1,10 +1,9 @@
 # monic_asic
 
-*A tiny TPU / MoE accelerator.* (GitHub repo: `moni_asic`)
+
 
 A small custom inference chip for a quantized mixture-of-experts model, built to test whether a model-specialized design can beat general-purpose silicon on efficiency (tokens per joule and per area, not absolute speed).
 
-Status: early. A numpy reference of one Qwen3 layer, a toy MoE, frozen test prompts, draft acceptance criteria and a draft numerics contract. No RTL yet.
 
 ## Where to start
 - `CLAUDE.md` — scope, decisions, working rules, current status (read this first).
