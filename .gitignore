@@ -30,6 +30,7 @@ session.log
 
 # third-party reference repos keep their own history; do not track them here
 reference/
+/pytorch/
 /tiny-tpu/
 /transformer-tpu-int4/
 
