@@ -125,12 +125,11 @@ class QuantizedWeight:
     def matmul(self, x):
         """x is fixed-point; return a fixed-point output with the same frac."""
         x = np.asarray(x, dtype=np.int64)
-        out = np.zeros((x.shape[0], self.q.shape[0]), dtype=np.int64)
-        for g0 in range(0, self.q.shape[1], self.group):
-            g1 = g0 + self.group
-            products = x[:, g0:g1] @ self.q[:, g0:g1].T
-            out += round_shift(products * self.scales_q20[:, g0 // self.group], SCALE_FRAC)
-        return out
+        # Expand the group scales once so the whole projection is one integer
+        # GEMM. Rounding after the accumulated dot product is the hardware-like
+        # requantization point and avoids one GEMM per scale group.
+        effective = self.q.astype(np.int64) * np.repeat(self.scales_q20, self.group, axis=1)
+        return round_shift(x @ effective.T, SCALE_FRAC)
 
     def rows_fixed(self):
         """Return quantized rows as fixed-point values, for embeddings."""
