@@ -1,4 +1,4 @@
-# tiny_moe_chip
+# monic_asic
 
 *A tiny TPU / MoE accelerator.* (GitHub repo: `moni_asic`)
 
