@@ -22,6 +22,7 @@ def test_head_stats_matches_bruteforce(tmp_path):
     srt = np.sort(lg, 1)
     np.testing.assert_allclose(s["top1"], srt[:, -1], rtol=1e-6)
     np.testing.assert_allclose(s["top2"], srt[:, -2], rtol=1e-6)
+    # Different vocabulary chunk sizes can change float32/BLAS accumulation by a few ulps.
     np.testing.assert_allclose(s["target_logit"], lg[np.arange(len(targets)), targets], rtol=1e-6, atol=1e-6)
     want_lse = np.log(np.exp(lg - lg.max(1, keepdims=True)).sum(1)) + lg.max(1)
     np.testing.assert_allclose(s["lse"], want_lse, rtol=1e-6, atol=1e-6)
