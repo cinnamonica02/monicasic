@@ -1,0 +1,29 @@
+name: Tests
+
+on:
+  push:
+  pull_request:
+
+permissions:
+  contents: read
+
+jobs:
+  pytest:
+    runs-on: ubuntu-24.04
+    env:
+      UV_PROJECT_ENVIRONMENT: .venv
+
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v6
+
+      - name: Set up uv
+        uses: astral-sh/setup-uv@v6
+        with:
+          python-version: "3.12.10"
+
+      - name: Install development dependencies
+        run: uv sync --group dev
+
+      - name: Run tests
+        run: uv run pytest
