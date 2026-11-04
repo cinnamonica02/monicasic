@@ -28,6 +28,3 @@ jobs:
 
       - name: Run tests
         run: uv run pytest
-
-      - name: Build and test C++ ISS
-        run: cmake -S . -B build && cmake --build build && ctest --test-dir build --output-on-failure

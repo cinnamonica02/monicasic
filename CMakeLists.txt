@@ -1,4 +1,5 @@
-# C++ instruction-set simulator, memory model, and host runtime.
+# Placeholder for future C++ simulator, memory model, and host runtime.
+# Python currently owns the exploratory exporter and ISS contract.
 cmake_minimum_required(VERSION 3.20)
 project(tiny_moe_chip LANGUAGES CXX)
 
