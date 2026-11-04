@@ -1,5 +1,4 @@
-# Placeholder for the C++ parts (instruction-set simulator, memory model, host runtime). Nothing to build yet.
-# cmake and a C++ compiler are not installed on the dev laptop at the time of writing.
+# C++ instruction-set simulator, memory model, and host runtime.
 cmake_minimum_required(VERSION 3.20)
 project(tiny_moe_chip LANGUAGES CXX)
 
