@@ -1,3 +1,5 @@
+import json
+
 import numpy as np
 
 from tiny_moe.hw import export_schedule, run_router_schedule, topk_indices
@@ -21,7 +23,15 @@ def test_router_iss_dispatches_and_combines_integer_outputs():
 
 def test_schedule_has_fixed_commands_for_dynamic_routes():
     schedule = export_schedule(2, 3, 2)
+    schedule = json.loads(json.dumps(schedule))
     assert [c["op"] for c in schedule["commands"]] == [
         "ROUTE_TOPK", "DISPATCH", "EXPERT", "EXPERT", "EXPERT", "COMBINE",
         "ROUTE_TOPK", "DISPATCH", "EXPERT", "EXPERT", "EXPERT", "COMBINE",
     ]
+
+
+def test_iss_rejects_reordered_commands():
+    schedule = export_schedule(1, 2, 1)
+    schedule["commands"][0], schedule["commands"][1] = schedule["commands"][1], schedule["commands"][0]
+    with np.testing.assert_raises(ValueError):
+        run_router_schedule(schedule, np.zeros((1, 1, 2)), np.zeros((1, 1, 2, 1)), np.array([[[1 << 15]]]))

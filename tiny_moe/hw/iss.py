@@ -2,6 +2,8 @@
 
 import numpy as np
 
+from .export import validate_schedule
+
 
 def topk_indices(scores, k):
     """Select highest scores, breaking ties by the lowest expert index."""
@@ -30,9 +32,7 @@ def run_router_schedule(schedule, router_scores, expert_outputs, weights_q15):
     shape (layers, tokens, experts, hidden), and `weights_q15` has shape
     (layers, tokens, top_k). Outputs are int64 hidden states.
     """
-    required = {"version", "n_layers", "n_experts", "top_k", "commands"}
-    if set(schedule) != required or schedule["version"] != 1:
-        raise ValueError("unsupported schedule")
+    validate_schedule(schedule)
     scores = np.asarray(router_scores)
     expert_outputs = np.asarray(expert_outputs, dtype=np.int64)
     weights = np.asarray(weights_q15, dtype=np.int64)
