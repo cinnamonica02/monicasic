@@ -2,7 +2,7 @@ import json
 
 import numpy as np
 
-from tiny_moe.hw import export_schedule, run_router_schedule, topk_indices
+from tiny_moe.hw import export_schedule, router_weights_q15, run_router_schedule, topk_indices
 
 
 def test_topk_ties_choose_lowest_expert_index():
@@ -19,6 +19,19 @@ def test_router_iss_dispatches_and_combines_integer_outputs():
     out, routes = run_router_schedule(schedule, scores, expert_outputs, weights)
     np.testing.assert_array_equal(routes, [[[1, 2], [0, 2]]])
     np.testing.assert_array_equal(out, [[[25, 3], [2, 15]]])
+
+
+def test_router_weights_are_integer_q15_and_tie_deterministic():
+    routes, weights = router_weights_q15(np.array([[7, 7, 1, 0]], dtype=np.int32), 2)
+    np.testing.assert_array_equal(routes, [[0, 1]])
+    assert weights.dtype == np.int64
+    np.testing.assert_array_equal(weights.sum(axis=1), [1 << 15])
+    np.testing.assert_array_equal(weights, [[16384, 16384]])
+
+
+def test_router_weights_reject_float_scores():
+    with np.testing.assert_raises(ValueError):
+        router_weights_q15(np.array([[1.0, 2.0]]), 1)
 
 
 def test_schedule_has_fixed_commands_for_dynamic_routes():

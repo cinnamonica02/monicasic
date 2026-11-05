@@ -3,6 +3,9 @@
 import numpy as np
 
 from .export import validate_schedule
+from ..ref.integer_qwen3 import EXP_LUT, LUT_LIMIT, PROB_FRAC
+
+ROUTER_SCORE_FRAC = 8
 
 
 def topk_indices(scores, k):
@@ -12,6 +15,30 @@ def topk_indices(scores, k):
         raise ValueError("scores must be 2-D and 1 <= k <= number of experts")
     # Stable descending sort preserves expert index order for equal scores.
     return np.argsort(-scores, axis=1, kind="stable")[:, :k]
+
+
+def router_weights_q15(scores, k):
+    """Return top-k routes and integer-renormalized Q15 gate weights.
+
+    Scores are signed integer logits in Q8. Score differences are clamped to
+    eight before indexing the shared integer exponential LUT.
+    """
+    scores = np.asarray(scores)
+    if not np.issubdtype(scores.dtype, np.integer):
+        raise ValueError("router scores must be integer logits")
+    routes = topk_indices(scores, k)
+    selected = np.take_along_axis(scores, routes, axis=1).astype(np.int64)
+    delta = np.maximum(0, scores.max(axis=1, keepdims=True) - selected)
+    exp = EXP_LUT[np.minimum(delta, LUT_LIMIT)]
+    total = exp.sum(axis=1, dtype=np.int64)
+    scaled = exp * (1 << PROB_FRAC)
+    weights = scaled // total[:, None]
+    remainder = (1 << PROB_FRAC) - weights.sum(axis=1)
+    fractions = scaled % total[:, None]
+    for row, count in enumerate(remainder):
+        order = np.argsort(-fractions[row], kind="stable")
+        weights[row, order[:count]] += 1
+    return routes, weights.astype(np.int64)
 
 
 def _round_shift_nearest_even(x, bits):
