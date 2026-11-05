@@ -35,3 +35,10 @@ def test_iss_rejects_reordered_commands():
     schedule["commands"][0], schedule["commands"][1] = schedule["commands"][1], schedule["commands"][0]
     with np.testing.assert_raises(ValueError):
         run_router_schedule(schedule, np.zeros((1, 1, 2)), np.zeros((1, 1, 2, 1)), np.array([[[1 << 15]]]))
+
+
+def test_schedule_rejects_hardware_unsupported_router_sizes():
+    with np.testing.assert_raises(ValueError):
+        export_schedule(1, 9, 1)
+    with np.testing.assert_raises(ValueError):
+        export_schedule(1, 8, 3)
