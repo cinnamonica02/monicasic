@@ -17,3 +17,8 @@ by `tiny_moe.hw`; it is not the frozen Qwen3 A2 contract.
 
 The router weights are multiplied with integer expert outputs, accumulated in
 the reference width, then rounded-to-nearest-even back to the output format.
+
+For the initial range check, expert outputs are INT16/Q10. The conservative
+Top-2 bound is `2 * 32767 * 32768`, which fits in a signed 32-bit combine
+accumulator. Expert GEMM accumulators are separate and remain INT64 in the
+reference until their own range analysis is complete.

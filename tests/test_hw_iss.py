@@ -2,7 +2,8 @@ import json
 
 import numpy as np
 
-from tiny_moe.hw import export_schedule, router_weights_q15, run_router_schedule, topk_indices
+from tiny_moe.hw import (export_schedule, required_combine_accumulator_bits,
+                         router_weights_q15, run_router_schedule, topk_indices)
 
 
 def test_topk_ties_choose_lowest_expert_index():
@@ -32,6 +33,10 @@ def test_router_weights_are_integer_q15_and_tie_deterministic():
 def test_router_weights_reject_float_scores():
     with np.testing.assert_raises(ValueError):
         router_weights_q15(np.array([[1.0, 2.0]]), 1)
+
+
+def test_int16_q10_top2_combine_fits_signed_int32():
+    assert required_combine_accumulator_bits() == 32
 
 
 def test_schedule_has_fixed_commands_for_dynamic_routes():

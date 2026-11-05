@@ -8,6 +8,14 @@ from ..ref.integer_qwen3 import EXP_LUT, LUT_LIMIT, PROB_FRAC
 ROUTER_SCORE_FRAC = 8
 
 
+def required_combine_accumulator_bits(output_abs_max=32767, top_k=2, weight_frac=15):
+    """Return conservative signed bits for the pre-requantization combine sum."""
+    if output_abs_max < 0 or top_k < 1 or weight_frac < 0:
+        raise ValueError("range inputs must be non-negative and top_k must be positive")
+    bound = top_k * output_abs_max * (1 << weight_frac)
+    return 1 if bound == 0 else bound.bit_length() + 1
+
+
 def topk_indices(scores, k):
     """Select highest scores, breaking ties by the lowest expert index."""
     scores = np.asarray(scores)
